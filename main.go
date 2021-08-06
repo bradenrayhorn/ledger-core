@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"log"
+
+	"github.com/bradenrayhorn/ledger-core/server"
+)
 
 func main() {
-	fmt.Println("initializing ledger-core...")
+	server := server.CreateServer()
+	err := server.Run()
+
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
