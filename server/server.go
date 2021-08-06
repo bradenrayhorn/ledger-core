@@ -4,6 +4,7 @@ import (
 	"log"
 
 	core "github.com/bradenrayhorn/ledger-core"
+	"github.com/bradenrayhorn/ledger-core/http"
 )
 
 type server struct {
@@ -20,6 +21,9 @@ func CreateServer() *server {
 
 func (s server) Run() error {
 	log.Println("initializing ledger-core...")
+
+	httpServer := http.CreateServer(s.config)
+	httpServer.Start()
 
 	return nil
 }
