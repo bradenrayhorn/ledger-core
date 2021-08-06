@@ -8,22 +8,26 @@ import (
 )
 
 type server struct {
-	config *core.Config
+	Config     *core.Config
+	httpServer *http.Server
 }
 
 func CreateServer() *server {
 	config := loadConfig()
 
 	return &server{
-		config: config,
+		Config:     config,
+		httpServer: http.CreateServer(config),
 	}
+}
+
+func (s server) GetHttpServer() *http.Server {
+	return s.httpServer
 }
 
 func (s server) Run() error {
 	log.Println("initializing ledger-core...")
 
-	httpServer := http.CreateServer(s.config)
-	httpServer.Start()
-
+	s.httpServer.Start()
 	return nil
 }
