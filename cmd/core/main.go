@@ -11,6 +11,6 @@ func main() {
 	err := server.Run()
 
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("failed to start server: %s", err)
 	}
 }
