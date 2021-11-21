@@ -6,24 +6,34 @@ import (
 	core "github.com/bradenrayhorn/ledger-core"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/render"
 )
 
 type Server struct {
-	config *core.Config
+	Config                 *core.Config
+	UserMarketProviderRepo core.UserMarketProviderRepository
+	SessionService         core.SessionService
+
 	router *chi.Mux
 }
 
-func CreateServer(config *core.Config) *Server {
+func (s *Server) Initialize() {
 	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Get("/health-check", func(w http.ResponseWriter, req *http.Request) {
-		w.Write([]byte("ok"))
+	r.Use(render.SetContentType(render.ContentTypeJSON), middleware.Logger)
+	r.Get("/health-check", HealthCheck)
+
+	r.Route("/api", func(r chi.Router) {
+		r.Use(s.authentication())
+
+		r.Route("/v1", func(r chi.Router) {
+			r.Route("/market-provider", func(r chi.Router) {
+				r.Get("/", s.GetMarketProvider)
+				r.Post("/", s.UpdateMarketProvider)
+			})
+		})
 	})
 
-	return &Server{
-		config: config,
-		router: r,
-	}
+	s.router = r
 }
 
 func (s *Server) GetRouter() *chi.Mux {
@@ -31,5 +41,5 @@ func (s *Server) GetRouter() *chi.Mux {
 }
 
 func (s *Server) Start() {
-	http.ListenAndServe(":"+s.config.HttpPort, s.router)
+	http.ListenAndServe(":"+s.Config.HttpPort, s.router)
 }

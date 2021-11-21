@@ -1,4 +1,7 @@
 .DS_Store
 ledger-core
 .env
+.env.test
 reports/
+ca.pem
+token
