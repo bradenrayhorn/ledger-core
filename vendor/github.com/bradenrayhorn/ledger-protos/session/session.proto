@@ -1,0 +1,23 @@
+syntax = "proto3";
+package session;
+
+option go_package = "github.com/bradenrayhorn/ledger-protos/session";
+
+message SessionAuthenticateRequest {
+   string SessionID = 1;
+   string IP = 2;
+   string UserAgent = 3;
+}
+
+message SessionAuthenticateResponse {
+  Session Session = 1;
+}
+
+message Session {
+  string SessionID = 1;
+  string UserID = 2;
+}
+
+service SessionAuthenticator {
+  rpc Authenticate (SessionAuthenticateRequest) returns (SessionAuthenticateResponse) {}
+}
