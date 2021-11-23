@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 
 	core "github.com/bradenrayhorn/ledger-core"
@@ -11,6 +12,7 @@ import (
 
 type Server struct {
 	Config                 *core.Config
+	Logger                 core.Logger
 	UserMarketProviderRepo core.UserMarketProviderRepository
 	SessionService         core.SessionService
 
@@ -41,5 +43,7 @@ func (s *Server) GetRouter() *chi.Mux {
 }
 
 func (s *Server) Start() {
+	s.Logger.Info(fmt.Sprintf("starting http server on port %s", s.Config.HttpPort))
+
 	http.ListenAndServe(":"+s.Config.HttpPort, s.router)
 }

@@ -1,7 +1,6 @@
 package http
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
@@ -23,7 +22,7 @@ func (s *Server) GetMarketProvider(w http.ResponseWriter, req *http.Request) {
 
 	userMarketProvider, err := s.UserMarketProviderRepo.GetUserMarketProvider(req.Context(), userID)
 	if err != nil {
-		log.Println(err)
+		s.Logger.Error(err.Error())
 		return
 	}
 
@@ -49,7 +48,7 @@ func (r *updateMarketProviderRequest) Bind(req *http.Request) error {
 func (s *Server) UpdateMarketProvider(w http.ResponseWriter, req *http.Request) {
 	data := &updateMarketProviderRequest{}
 	if err := render.Bind(req, data); err != nil {
-		log.Println(err)
+		s.Logger.Error(err.Error())
 		return
 	}
 
@@ -63,6 +62,6 @@ func (s *Server) UpdateMarketProvider(w http.ResponseWriter, req *http.Request) 
 	}
 
 	if err != nil {
-		log.Println(err)
+		s.Logger.Error(err.Error())
 	}
 }

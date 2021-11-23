@@ -26,7 +26,11 @@ func SetupHTTPServer() TestServer {
 	loadConfig()
 
 	config := &core.Config{
-		HttpPort:     "80",
+		HttpPort: "80",
+
+		LogLevel:  core.LogLevelDebug,
+		LogFormat: core.LogFormatConsole,
+
 		PgHost:       viper.GetString("pg_host"),
 		PgPort:       viper.GetString("pg_port"),
 		PgUsername:   viper.GetString("pg_username"),

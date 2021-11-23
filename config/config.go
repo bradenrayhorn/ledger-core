@@ -29,6 +29,8 @@ func LoadConfig() (*core.Config, error) {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	viper.SetDefault("http_port", "8080")
+	viper.SetDefault("log_level", "info")
+	viper.SetDefault("log_format", "json")
 
 	certPool, err := loadCACertPool(viper.GetString("ca_cert_path"))
 	if err != nil {
@@ -49,9 +51,17 @@ func LoadConfig() (*core.Config, error) {
 
 	grpcConn, err := grpc.Dial(viper.GetString("grpc_host_auth"), grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)))
 
+	logLevel := core.LogLevelInfo
+	if viper.GetString("log_level") == "debug" {
+		logLevel = core.LogLevelDebug
+	}
+
 	cfg := &core.Config{
 		// http server
 		HttpPort: viper.GetString("http_port"),
+		// logging
+		LogLevel:  logLevel,
+		LogFormat: core.LogFormat(viper.GetString("log_format")),
 		// grpc
 		GrpcConn: grpcConn,
 		// postgres
