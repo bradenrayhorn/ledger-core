@@ -38,7 +38,10 @@ func (r *UserMarketProviderRepository) GetUserMarketProvider(ctx context.Context
 }
 
 func (r *UserMarketProviderRepository) SetUserMarketProvider(ctx context.Context, userUUID uuid.UUID, provider string) error {
-	return nil
+	return r.db.SetUserMarketProvider(ctx, db.SetUserMarketProviderParams{
+		UserUuid: userUUID,
+		Provider: provider,
+	})
 }
 
 func (r *UserMarketProviderRepository) DeleteUserMarketProvider(ctx context.Context, userUUID uuid.UUID) error {

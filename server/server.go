@@ -1,8 +1,6 @@
 package server
 
 import (
-	"context"
-	"fmt"
 	"log"
 
 	core "github.com/bradenrayhorn/ledger-core"
@@ -32,9 +30,11 @@ func (s server) GetHttpServer() *http.Server {
 func (s *server) Setup() error {
 	log.Println("initializing ledger-core...")
 
-	if err := s.setupPostgres(); err != nil {
+	pool, err := postgres.CreatePool(s.Config)
+	if err != nil {
 		return err
 	}
+	s.pgxPool = pool
 
 	s.httpServer = &http.Server{
 		Config:                 s.Config,
@@ -50,26 +50,4 @@ func (s *server) Run() {
 	log.Println("starting ledger-core...")
 
 	s.httpServer.Start()
-}
-
-func (s *server) setupPostgres() error {
-	pgxConfig, err := pgxpool.ParseConfig(fmt.Sprintf("postgres://%s:%s@%s:%s/%s%s",
-		s.Config.PgUsername,
-		s.Config.PgPassword,
-		s.Config.PgHost,
-		s.Config.PgPort,
-		s.Config.PgDatabase,
-		s.Config.PgParameters,
-	))
-	if err != nil {
-		return err
-	}
-
-	pool, err := pgxpool.ConnectConfig(context.Background(), pgxConfig)
-	if err != nil {
-		return err
-	}
-	s.pgxPool = pool
-
-	return nil
 }
