@@ -21,4 +21,6 @@ type Logger interface {
 	Error(msg string, args ...interface{})
 	Fatal(msg string, args ...interface{})
 	Panic(msg string, args ...interface{})
+
+	Flush()
 }

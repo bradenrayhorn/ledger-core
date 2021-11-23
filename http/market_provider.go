@@ -22,7 +22,7 @@ func (s *Server) GetMarketProvider(w http.ResponseWriter, req *http.Request) {
 
 	userMarketProvider, err := s.UserMarketProviderRepo.GetUserMarketProvider(req.Context(), userID)
 	if err != nil {
-		s.Logger.Error(err.Error())
+		s.HandleError(w, req, err)
 		return
 	}
 
@@ -31,7 +31,8 @@ func (s *Server) GetMarketProvider(w http.ResponseWriter, req *http.Request) {
 		response.Data = &userMarketProvider.Provider
 	}
 
-	render.Render(w, req, response)
+	err = render.Render(w, req, response)
+	s.HandleError(w, req, err)
 }
 
 // update market provider
@@ -48,7 +49,7 @@ func (r *updateMarketProviderRequest) Bind(req *http.Request) error {
 func (s *Server) UpdateMarketProvider(w http.ResponseWriter, req *http.Request) {
 	data := &updateMarketProviderRequest{}
 	if err := render.Bind(req, data); err != nil {
-		s.Logger.Error(err.Error())
+		s.HandleError(w, req, err)
 		return
 	}
 
@@ -61,7 +62,5 @@ func (s *Server) UpdateMarketProvider(w http.ResponseWriter, req *http.Request) 
 		err = s.UserMarketProviderRepo.DeleteUserMarketProvider(req.Context(), userID)
 	}
 
-	if err != nil {
-		s.Logger.Error(err.Error())
-	}
+	s.HandleError(w, req, err)
 }

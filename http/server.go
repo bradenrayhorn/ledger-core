@@ -25,7 +25,7 @@ func (s *Server) Initialize() {
 	r.Get("/health-check", HealthCheck)
 
 	r.Route("/api", func(r chi.Router) {
-		r.Use(s.authentication())
+		r.Use(render.SetContentType(render.ContentTypeJSON), s.authentication())
 
 		r.Route("/v1", func(r chi.Router) {
 			r.Route("/market-provider", func(r chi.Router) {

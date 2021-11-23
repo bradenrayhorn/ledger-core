@@ -52,4 +52,6 @@ func (s *server) Run() {
 	s.logger.Info("starting ledger-core...")
 
 	s.httpServer.Start()
+
+	defer s.logger.Flush()
 }

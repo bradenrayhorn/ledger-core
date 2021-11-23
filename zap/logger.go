@@ -48,3 +48,7 @@ func (z ZapLogger) Fatal(msg string, args ...interface{}) {
 func (z ZapLogger) Panic(msg string, args ...interface{}) {
 	z.l.Sugar().Panicw(msg, args...)
 }
+
+func (z ZapLogger) Flush() {
+	z.l.Sync()
+}
