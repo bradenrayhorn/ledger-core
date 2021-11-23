@@ -3,13 +3,10 @@
 package db
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
 type UserMarketProvider struct {
-	UserUuid  uuid.UUID
-	Provider  string
-	CreatedAt time.Time
+	UserUuid uuid.UUID
+	Provider string
 }

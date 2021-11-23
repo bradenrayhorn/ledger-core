@@ -3,7 +3,6 @@ package config
 import (
 	"crypto/x509"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/url"
 	"strings"
@@ -42,7 +41,6 @@ func loadCertify(vaultAddr string, vaultPki string, vaultRole string, vaultCn st
 		TimeToLive: time.Hour * 24,
 	}
 
-	fmt.Println(vaultCn)
 	certify := &certify.Certify{
 		Issuer:      issuer,
 		CommonName:  vaultCn,

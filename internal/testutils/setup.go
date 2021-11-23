@@ -6,13 +6,21 @@ import (
 	"strings"
 
 	core "github.com/bradenrayhorn/ledger-core"
+	"github.com/bradenrayhorn/ledger-core/postgres"
 	"github.com/bradenrayhorn/ledger-core/server"
 	"github.com/go-chi/chi/v5"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
-func SetupHTTPServer() (*chi.Mux, *MockGrpcServer) {
+type TestServer struct {
+	Http *chi.Mux
+	Grpc *MockGrpcServer
+	Pg   *pgxpool.Pool
+}
+
+func SetupHTTPServer() TestServer {
 	mockGRPC := SetupGrpcConn()
 
 	loadConfig()
@@ -30,9 +38,18 @@ func SetupHTTPServer() (*chi.Mux, *MockGrpcServer) {
 	}
 
 	sv := server.CreateServer(config)
-	sv.Setup()
+	err := sv.Setup()
+	if err != nil {
+		log.Fatalf("server setup failed, %v", err)
+	}
 
-	return sv.GetHttpServer().GetRouter(), mockGRPC
+	pg, _ := postgres.CreatePool(config)
+
+	return TestServer{
+		Http: sv.GetHttpServer().GetRouter(),
+		Grpc: mockGRPC,
+		Pg:   pg,
+	}
 }
 
 func loadConfig() {

@@ -1,8 +1,12 @@
+SHELL = bash
+PG_PORT?=55001
+PG_DATABASE?=ledger_core
+
 migrate:
-	 migrate -database 'postgres://postgres:password@127.0.0.1:${POSTGRES_PORT}/ledger_core?sslmode=disable' -path sql/migrations up
+	migrate -database "postgres://postgres:password@127.0.0.1:${PG_PORT}/${PG_DATABASE}?sslmode=disable" -path sql/migrations up
 
 migrate-down:
-	 migrate -database 'postgres://postgres:password@127.0.0.1:${POSTGRES_PORT}/ledger_core?sslmode=disable' -path sql/migrations down
+	migrate -database 'postgres://postgres:password@127.0.0.1:${PG_PORT}/${PG_DATABASE}?sslmode=disable' -path sql/migrations down
 
 build:
 	go build -o ./ledger-core ./cmd/core

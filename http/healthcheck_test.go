@@ -10,12 +10,12 @@ import (
 )
 
 func TestHealthCheck(t *testing.T) {
-	sv, grpcSv := testutils.SetupHTTPServer()
-	defer grpcSv.Close()
+	sv := testutils.SetupHTTPServer()
+	defer sv.Grpc.Close()
 
 	req, _ := http.NewRequest(http.MethodGet, "/health-check", nil)
 	res := httptest.NewRecorder()
-	sv.ServeHTTP(res, req)
+	sv.Http.ServeHTTP(res, req)
 
 	assert.Equal(t, http.StatusOK, res.Result().StatusCode)
 }
