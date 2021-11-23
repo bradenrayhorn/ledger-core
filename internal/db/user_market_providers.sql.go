@@ -9,6 +9,15 @@ import (
 	"github.com/google/uuid"
 )
 
+const deleteUserMarketProvider = `-- name: DeleteUserMarketProvider :exec
+DELETE FROM user_market_providers WHERE user_uuid = $1
+`
+
+func (q *Queries) DeleteUserMarketProvider(ctx context.Context, userUuid uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteUserMarketProvider, userUuid)
+	return err
+}
+
 const getUserMarketProvider = `-- name: GetUserMarketProvider :one
 SELECT user_uuid, provider FROM user_market_providers WHERE user_uuid = $1
 `

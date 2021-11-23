@@ -45,5 +45,5 @@ func (r *UserMarketProviderRepository) SetUserMarketProvider(ctx context.Context
 }
 
 func (r *UserMarketProviderRepository) DeleteUserMarketProvider(ctx context.Context, userUUID uuid.UUID) error {
-	return nil
+	return r.db.DeleteUserMarketProvider(ctx, userUUID)
 }
